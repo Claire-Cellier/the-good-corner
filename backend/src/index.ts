@@ -1,18 +1,24 @@
 import express from "express";
-// import sqlite3 from "sqlite3";
 import "reflect-metadata";
+
 import dataSource from "./config/db";
+
 import { Ad } from "./entities/Ad";
 import { Category } from "./entities/Category";
 import { Tag } from "./entities/Tag";
+import { In, type FindOptionsWhere } from "typeorm";
 
 const app = express();
-
-// const db = new sqlite3.Database("./database/good_corner.sqlite");
 
 app.use(express.json());
 
 const port = 3000;
+
+app.get("/", (_req, res) => {
+	res.send("Hello World!");
+});
+
+// CATEGORIES
 
 app.post("/categories", async (req, res) => {
 	const categories = req.body;
@@ -27,11 +33,18 @@ app.post("/categories", async (req, res) => {
 	res.status(201).json(categoryEntities);
 });
 
+app.get("/categories", async (_req, res) => {
+	const categories = await Category.find();
+	res.send(categories);
+});
+
+// TAGS
+
 app.post("/tags", async (req, res) => {
 	const tags = req.body;
-	const tagEntities = tags.map((category: { title: string }) => {
+	const tagEntities = tags.map((tag: { title: string }) => {
 		const newTag = new Tag();
-		newTag.title = category.title;
+		newTag.title = tag.title;
 		return newTag;
 	});
 
@@ -40,12 +53,23 @@ app.post("/tags", async (req, res) => {
 	res.status(201).json(tagEntities);
 });
 
-app.get("/", (_req, res) => {
-	res.send("Hello World!");
+app.get("/tags", async (_req, res) => {
+	const tags = await Tag.find();
+	res.send(tags);
 });
 
-app.get("/ads", async (_req, res) => {
-	const ads = await Ad.find();
+// ADS
+
+app.get("/ads", async (req, res) => {
+	const { category, tag } = req.query;
+
+	const where: FindOptionsWhere<Ad> = {};
+	if (category) where.category = { id: Number(category) };
+	if (tag) where.tags = { id: Number(tag) };
+
+	const ads = await Ad.find({
+		where,
+	});
 	res.send(ads);
 });
 
@@ -64,10 +88,12 @@ app.post("/ads", async (req, res) => {
 		picture,
 		location,
 		categoryId,
+		tagIds,
 		createdAt,
 	} = req.body;
 
-	const category = await Category.findOneOrFail({ where: { id: categoryId } });
+	const category = await Category.findOneByOrFail({ id: categoryId });
+	const tags = await Tag.findBy({ id: In(tagIds) });
 
 	const ad = new Ad();
 	ad.title = title;
@@ -78,6 +104,7 @@ app.post("/ads", async (req, res) => {
 	ad.location = location;
 	ad.createdAt = createdAt;
 	ad.category = category;
+	ad.tags = tags;
 
 	await ad.save();
 
@@ -122,81 +149,13 @@ app.delete("/ads/:id", async (req, res) => {
 	res.send("OK");
 });
 
-// app.get("/ads", (_req, res) => {
-// 	db.all("SELECT * FROM ad", (err, rows) => {
-// 		if (err) {
-// 			console.error(err);
-// 			res.status(500).send("An error occurred");
-// 		} else {
-// 			res.send(rows);
-// 		}
-// 	});
-// });
-
-// app.post("/ads", (req, res) => {
-// 	const stmt = db.prepare(
-// 		"INSERT INTO ad (title, description, owner, price, picture, location, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?)",
-// 	);
-// 	stmt.run(
-// 		[
-// 			req.body.title,
-// 			req.body.description,
-// 			req.body.owner,
-// 			req.body.price,
-// 			req.body.picture,
-// 			req.body.location,
-// 			req.body.createdAt,
-// 		],
-// 		(err) => {
-// 			if (err) {
-// 				console.error(err);
-// 				res.status(500).send("An error occurred");
-// 			} else {
-// 				res.sendStatus(201).send("congrats, ad is created");
-// 			}
-// 		},
-// 	);
-// });
-
-// app.delete("/ads/:id", (req, res) => {
-// 	const stmt = db.prepare("DELETE FROM ad WHERE id = ?");
-// 	stmt.run([req.params.id], (err) => {
-// 		if (err) {
-// 			console.error(err);
-// 			res.status(500).send("An error occurred");
-// 		} else {
-// 			res.sendStatus(200);
-// 		}
-// 	});
-// });
-
-// app.put("/ads/:id", (req, res) => {
-// 	const stmt = db.prepare(
-// 		"UPDATE ad SET title = ?, description = ?, owner = ?, price = ?, picture = ?, location = ?, created_at = ? WHERE id = ? ",
-// 	);
-// 	stmt.run(
-// 		[
-// 			req.body.title,
-// 			req.body.description,
-// 			req.body.owner,
-// 			req.body.price,
-// 			req.body.picture,
-// 			req.body.location,
-// 			req.body.created_at,
-// 			req.params.id,
-// 		],
-// 		(err) => {
-// 			if (err) {
-// 				console.error(err);
-// 				res.status(500).send("An error occurred");
-// 			} else {
-// 				res.sendStatus(200);
-// 			}
-// 		},
-// 	);
-// });
-
 app.listen(port, async () => {
-	await dataSource.initialize();
 	console.log(`Example app listening on port ${port}`);
+	await dataSource.initialize();
+	const categories = await Category.find();
+	if (categories.length === 0) {
+		const misc = new Category();
+		misc.title = "misc";
+		misc.save();
+	}
 });

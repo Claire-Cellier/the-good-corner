@@ -2,6 +2,10 @@ get http://localhost:3000/ads
 
 ###
 
+get http://localhost:3000/ads?tag=1
+
+###
+
 post http://localhost:3000/ads
 Content-Type: application/json
 
@@ -13,6 +17,7 @@ Content-Type: application/json
   "picture": "https://images.lecho.be/view?iid=dc:139656677&context=ONLINE&ratio=16/9&width=640&u=1562267496000",
   "location": "Paris",
 	"categoryId": 2,
+	"tagIds": [1, 2],
   "createdAt": "2023-09-05T10:13:14.755Z"
 }
 

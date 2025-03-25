@@ -3,5 +3,6 @@ Content-Type: application/json
 
 [
 	{"title": "Other"},
+  {"title": "Vehicule"},
 	{"title": "Hifi"}
 ]
