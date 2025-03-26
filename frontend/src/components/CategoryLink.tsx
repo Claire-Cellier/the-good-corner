@@ -3,13 +3,14 @@ type CategoryLinkProps = {
 	title: string;
 };
 
+import { Link } from "react-router";
 import "./CategoryLink.module.css";
 
 function CategoryLink({ link, title }: CategoryLinkProps) {
 	return (
-		<a href={link} className="category-navigation-link">
+		<Link to={link} className="category-navigation-link">
 			{title}
-		</a>
+		</Link>
 	);
 }
 

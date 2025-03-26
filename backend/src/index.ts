@@ -10,6 +10,10 @@ import { In, type FindOptionsWhere } from "typeorm";
 
 const app = express();
 
+import cors from "cors";
+
+app.use(cors({ origin: "*" }));
+
 app.use(express.json());
 
 const port = 3000;
@@ -85,7 +89,7 @@ app.post("/ads", async (req, res) => {
 		description,
 		owner,
 		price,
-		picture,
+		img_url,
 		location,
 		categoryId,
 		tagIds,
@@ -100,7 +104,7 @@ app.post("/ads", async (req, res) => {
 	ad.description = description;
 	ad.owner = owner;
 	ad.price = price;
-	ad.picture = picture;
+	ad.img_url = img_url;
 	ad.location = location;
 	ad.createdAt = createdAt;
 	ad.category = category;
@@ -118,7 +122,7 @@ app.put("/ads/:id", async (req, res) => {
 		description,
 		owner,
 		price,
-		picture,
+		img_url,
 		location,
 		categoryId,
 		createdAd,
@@ -132,7 +136,7 @@ app.put("/ads/:id", async (req, res) => {
 		ad.description = description;
 		ad.owner = owner;
 		ad.price = price;
-		ad.picture = picture;
+		ad.img_url = img_url;
 		ad.location = location;
 		ad.createdAt = createdAd;
 		ad.category = category;

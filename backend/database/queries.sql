@@ -19,7 +19,7 @@ CREATE TABLE ad
 	description TEXT,
 	owner VARCHAR(100) NOT NULL,
 	price INT,
-  picture VARCHAR(100),
+  img_url VARCHAR(100),
   location VARCHAR(100),
 	categoryID INT NOT NULL,
 	createdAt DATE,
@@ -46,7 +46,7 @@ INSERT INTO category (title) VALUES
 INSERT INTO tag (title) VALUES 
 ('neuf'), ('soldé');
 
-INSERT INTO ad (title, description, owner, price, picture, location, createdAt, categoryID) VALUES
+INSERT INTO ad (title, description, owner, price, img_url, location, createdAt, categoryID) VALUES
 ('iPhone 13 Pro 128 Go - Très bon état', 'iPhone 13 Pro bleu, 128 Go, en excellent état, vendu avec sa boîte et son chargeur.', 'Sophie Martin', 750, 'iphone13.jpg', 'Paris', '2024-03-10', 1),
 ('Vélo de ville Nakamura', 'Vélo de ville Nakamura en bon état, léger et pratique pour les déplacements urbains.', 'Julien Durand', 150, 'velo_nakamura.jpg', 'Bordeaux', '2024-03-08', 2),
 ('Canapé convertible 3 places', 'Canapé gris en tissu, convertible en lit, idéal pour un studio ou un salon cosy.', 'Camille Lefebvre', 250, 'canape_convertible.jpg', 'Lyon', '2024-03-12', 1),
