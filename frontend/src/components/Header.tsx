@@ -2,62 +2,26 @@ import { Link } from "react-router";
 import CategoryLink from "./CategoryLink";
 
 import "./Header.module.css";
+import { useState, useEffect } from "react";
+import { fetchCategories } from "../services/categories";
+
+type categoryOrTag = {
+	id: number;
+	title: string;
+};
 
 function Header() {
-	const categories = [
-		{
-			title: "Ameublement",
-			link: "/",
-		},
-		{
-			title: "Électroménager",
-			link: "/",
-		},
-		{
-			title: "Photographie",
-			link: "/",
-		},
-		{
-			title: "Informatique",
-			link: "/",
-		},
-		{
-			title: "Téléphonie",
-			link: "/",
-		},
-		{
-			title: "Vélos",
-			link: "/",
-		},
-		{
-			title: "Véhicules",
-			link: "/",
-		},
-		{
-			title: "Sport",
-			link: "/",
-		},
-		{
-			title: "Habillement",
-			link: "/",
-		},
-		{
-			title: "Bébé",
-			link: "/",
-		},
-		{
-			title: "Outillages",
-			link: "/",
-		},
-		{
-			title: "Services",
-			link: "/",
-		},
-		{
-			title: "Vacances",
-			link: "/",
-		},
-	];
+	const [categories, setCategories] = useState<categoryOrTag[]>();
+
+	useEffect(() => {
+		const getCategories = async () => {
+			const data = await fetchCategories();
+			setCategories(data);
+		};
+
+		getCategories();
+	}, []);
+
 	return (
 		<header className="header">
 			<div className="main-menu">
@@ -85,15 +49,19 @@ function Header() {
 						</svg>
 					</button>
 				</form>
-				<Link to="/ad/new" className="button link-button">
+				<Link to="/ads/new" className="button link-button">
 					<span className="mobile-short-label">Publier</span>
 					<span className="desktop-long-label">Publier une annonce</span>
 				</Link>
 			</div>
 			<nav className="categories-navigation">
-				{categories.map((cat, index) => (
+				{categories?.map((cat, index) => (
 					<>
-						<CategoryLink key={cat.title} title={cat.title} link={cat.link} />
+						<CategoryLink
+							key={cat.title}
+							title={cat.title}
+							link={`category/${cat.id}`}
+						/>
 						{index < categories.length - 1 && " • "}
 					</>
 				))}

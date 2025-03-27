@@ -42,6 +42,12 @@ app.get("/categories", async (_req, res) => {
 	res.send(categories);
 });
 
+app.get("/categories/:id", async (req, res) => {
+	const id = Number.parseInt(req.params.id);
+	const category = await Category.findOneBy({ id });
+	res.send(category);
+});
+
 // TAGS
 
 app.post("/tags", async (req, res) => {
@@ -84,35 +90,23 @@ app.get("/ads/:id", async (req, res) => {
 });
 
 app.post("/ads", async (req, res) => {
-	const {
-		title,
-		description,
-		owner,
-		price,
-		img_url,
-		location,
-		categoryId,
-		tagIds,
-		createdAt,
-	} = req.body;
-
-	const category = await Category.findOneByOrFail({ id: categoryId });
-	const tags = await Tag.findBy({ id: In(tagIds) });
-
 	const ad = new Ad();
-	ad.title = title;
-	ad.description = description;
-	ad.owner = owner;
-	ad.price = price;
-	ad.img_url = img_url;
-	ad.location = location;
-	ad.createdAt = createdAt;
-	ad.category = category;
-	ad.tags = tags;
+	ad.title = req.body.title;
+	ad.description = req.body.description;
+	ad.owner = req.body.owner;
+	ad.price = req.body.price;
+	ad.img_url = req.body.img_url;
+	ad.location = req.body.location;
+	ad.category = req.body.category;
+	ad.tags = req.body.tags;
 
-	await ad.save();
-
-	res.json(ad);
+	try {
+		await ad.save();
+		res.status(201).send("Ad created with success");
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+	}
 });
 
 app.put("/ads/:id", async (req, res) => {
@@ -138,7 +132,6 @@ app.put("/ads/:id", async (req, res) => {
 		ad.price = price;
 		ad.img_url = img_url;
 		ad.location = location;
-		ad.createdAt = createdAd;
 		ad.category = category;
 
 		await ad.save();

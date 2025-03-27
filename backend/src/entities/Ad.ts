@@ -41,6 +41,6 @@ export class Ad extends BaseEntity {
 	@JoinTable({ name: "ads_tags" })
 	tags: Tag[];
 
-	@Column()
-	createdAt: Date;
+	@CreateDateColumn()
+	createdDate: Date;
 }

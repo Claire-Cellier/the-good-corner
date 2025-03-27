@@ -64,8 +64,6 @@ function RecentAds() {
 		fetchData();
 	}, []);
 
-	console.log(ads);
-
 	return (
 		<main className="main-content">
 			<h3>Basket total = {total} € </h3>
@@ -77,7 +75,7 @@ function RecentAds() {
 							img_url={ad.img_url}
 							title={ad.title}
 							price={ad.price}
-							link={ad.link}
+							id={ad.id}
 						/>
 						<button
 							type="button"

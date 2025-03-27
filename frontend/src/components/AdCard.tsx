@@ -3,17 +3,16 @@ import { Link } from "react-router";
 import "./AdCard.module.css";
 
 export type AdCardProps = {
-	id?: number;
+	id: number;
 	img_url: string;
 	title: string;
 	price: number;
-	link: string;
 };
 
-function AdCard({ img_url, title, price, link }: AdCardProps) {
+function AdCard({ id, img_url, title, price }: AdCardProps) {
 	return (
 		<div className="ad-card-container">
-			<Link className="ad-card-link" to={link}>
+			<Link className="ad-card-link" to={`/ads/${id}`}>
 				<img className="ad-card-image" src={img_url} alt="porte magazine" />
 				<div className="ad-card-text">
 					<div className="ad-card-title">{title}</div>
