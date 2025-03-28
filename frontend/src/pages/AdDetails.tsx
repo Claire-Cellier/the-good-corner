@@ -1,44 +1,54 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-type Ad = {
-	title: string;
-	category: string;
-	description: string;
-	owner: string;
-	price: number;
-	location: string;
-	tags: string;
-	img_url: string;
-	createdAt: string;
-};
+import type { Ad } from "../types/Ad";
+import type { Tag } from "../types/Tag";
+import { fetchAd } from "../services/ads";
 
 function AdDetails() {
 	const { id } = useParams();
 	const [ad, setAd] = useState<Ad>();
+	const navigate = useNavigate();
 
 	useEffect(() => {
+		if (!id) return;
 		const getAd = async () => {
-			const result = await axios.get(`http://localhost:3000/ads/${id}`);
-			setAd(result.data);
+			const data = await fetchAd(id);
+			setAd(data);
 		};
 		getAd();
 	}, [id]);
 
+	const deleteAd = async () => {
+		await axios.delete(`http://localhost:3000/ads/${id}`);
+		navigate("/");
+	};
+
+	const updateAd = () => {
+		navigate(`/ads/edit/${id}`);
+	};
+
+	if (!ad) return <p>Sorry, can't find this ad</p>;
+
 	return (
 		<main className="main-content">
-			<h2 className="ad-details-title">{ad?.title}</h2>
+			<h2 className="ad-details-title">{ad.title}</h2>
 			<section className="ad-details">
 				<div className="ad-details-image-container">
-					<img className="ad-details-image" src={ad?.img_url} alt={ad?.title} />
+					<img className="ad-details-image" src={ad.img_url} alt={ad.title} />
 				</div>
 				<div className="ad-details-info">
-					<div className="ad-details-price">{ad?.price} €</div>
-					<div className="ad-details-description">{ad?.description}</div>
+					<div className="ad-details-price">{ad.price} €</div>
+					<div className="ad-details-description">{ad.description}</div>
 					<hr className="separator" />
 					<div className="ad-details-owner">
-						Annoncée publiée par <b>{ad?.owner}</b> le {ad?.createdAt}.
+						Annoncée publiée par <b>{ad?.owner}</b> le {ad.createdAt}.
+					</div>
+					<div className="ad-details-description">
+						{ad.tags.map((tag: Tag) => (
+							<p key={tag.id}>{tag.title}</p>
+						))}
 					</div>
 					<a
 						href="mailto:serge@serge.com"
@@ -61,6 +71,12 @@ function AdDetails() {
 					</a>
 				</div>
 			</section>
+			<button type="button" className="button" onClick={deleteAd}>
+				Delete this ad
+			</button>
+			<button type="button" className="button" onClick={updateAd}>
+				Update this ad
+			</button>
 		</main>
 	);
 }

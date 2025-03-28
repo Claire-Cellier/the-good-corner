@@ -1,7 +1,5 @@
 import { Link } from "react-router";
 
-import "./AdCard.module.css";
-
 export type AdCardProps = {
 	id: number;
 	img_url: string;

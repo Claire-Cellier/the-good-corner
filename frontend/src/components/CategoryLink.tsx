@@ -4,7 +4,6 @@ type CategoryLinkProps = {
 };
 
 import { Link } from "react-router";
-import "./CategoryLink.module.css";
 
 function CategoryLink({ link, title }: CategoryLinkProps) {
 	return (

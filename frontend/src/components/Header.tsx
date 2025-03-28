@@ -1,26 +1,31 @@
-import { Link } from "react-router";
-import CategoryLink from "./CategoryLink";
-
-import "./Header.module.css";
+import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+
+import CategoryLink from "./CategoryLink";
 import { fetchCategories } from "../services/categories";
 
-type categoryOrTag = {
-	id: number;
-	title: string;
-};
+import type { Category } from "../types/Category";
 
 function Header() {
-	const [categories, setCategories] = useState<categoryOrTag[]>();
+	const [categories, setCategories] = useState<Category[]>();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const getCategories = async () => {
 			const data = await fetchCategories();
-			setCategories(data);
+			setCategories(data.slice(1));
 		};
 
 		getCategories();
 	}, []);
+
+	const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		const query = formData.get("search") as string;
+
+		navigate(`/ads?title=${query}`);
+	};
 
 	return (
 		<header className="header">
@@ -31,9 +36,13 @@ function Header() {
 						<span className="desktop-long-label">THE GOOD CORNER</span>
 					</Link>
 				</h1>
-				<form className="text-field-with-button">
-					<input className="text-field main-search-field" type="search" />
-					<button type="button" className="button button-primary">
+				<form className="text-field-with-button" onSubmit={handleSearch}>
+					<input
+						className="text-field main-search-field"
+						type="search"
+						name="search"
+					/>
+					<button type="submit" className="button button-primary">
 						<svg
 							aria-hidden="true"
 							width="16"
@@ -55,12 +64,13 @@ function Header() {
 				</Link>
 			</div>
 			<nav className="categories-navigation">
+				<CategoryLink title="Annonces récentes" link="/" /> •{" "}
 				{categories?.map((cat, index) => (
 					<>
 						<CategoryLink
-							key={cat.title}
+							key={cat.id}
 							title={cat.title}
-							link={`category/${cat.id}`}
+							link={`ads?category=${cat.id}`}
 						/>
 						{index < categories.length - 1 && " • "}
 					</>

@@ -21,8 +21,8 @@ Content-Type: application/json
     "price": 120,
     "img_url": "/images/table.webp",
     "location": "Paris, France",
-    "category": { "id": 2 },
-    "tags": [{ "id" : 1 }, { "id" : 2 }]
+    "category": 1,
+    "tags": ["1", "2"]
 }
 
 ###
@@ -37,8 +37,8 @@ Content-Type: application/json
     "price": 75,
     "img_url": "/images/dame-jeanne.webp",
     "location": "Lyon, France",
-    "category": { "id": 1 },
-    "tags": [{ "id" : 2 }]
+    "category": 1,
+    "tags": ["2"]
 }
 
 ###
@@ -53,8 +53,8 @@ Content-Type: application/json
     "price": 4,
     "img_url": "/images/vide-poche.webp",
     "location": "Marseille, France",
-    "category": { "id": 1 },
-    "tags": [{ "id" : 1 }]
+    "category": 1,
+    "tags": ["1"]
 }
 
 ###
@@ -69,7 +69,8 @@ Content-Type: application/json
     "price": 900,
     "img_url": "/images/vaisselier.webp",
     "location": "Bordeaux, France",
-    "category": { "id": 1 }
+    "category": 1,
+    "tags": []
 }
 
 ###
@@ -84,7 +85,8 @@ Content-Type: application/json
     "price": 8,
     "img_url": "/images/bougie.webp",
     "location": "Toulouse, France",
-    "category": { "id": 1 }
+    "category": 1,
+    "tags": []
 }
 
 ###
@@ -99,7 +101,8 @@ Content-Type: application/json
     "price": 45,
     "img_url": "/images/porte-magazine.webp",
     "location": "Nice, France",
-    "category": { "id": 1 }
+    "category": 1,
+    "tags": []
 }
 
 ###
@@ -109,6 +112,16 @@ Content-Type: application/json
 
 ###
 
-put http://localhost:3000/ads/2
+put http://localhost:3000/ads/1
 Content-Type: application/json
 
+{
+    "title": "Table",
+    "description": "Belle table en bois massif, idéale pour une salle à manger conviviale.",
+    "owner": "Jean Dupont",
+    "price": 80,
+    "img_url": "/images/table.webp",
+    "location": "Paris, France",
+    "category": 2,
+    "tags": ["1"]
+}

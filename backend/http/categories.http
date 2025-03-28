@@ -2,7 +2,12 @@ post http://localhost:3000/categories
 Content-Type: application/json
 
 [
-	{"title": "Other"},
-  {"title": "Vehicule"},
-	{"title": "Hifi"}
+  {"title": "Ameublement"},
+	{"title": "Electroménager"},
+	{"title": "Informatique"},
+	{"title": "Véhicules"},
+	{"title": "Habillement"},
+	{"title": "Outillage"},
+	{"title": "Services"},
+	{"title": "Other"}
 ]
