@@ -1,8 +1,8 @@
 import { Router } from "express";
 
-import adRoutes from "./ad.routes.js";
-import categoryRoutes from "./category.routes.js";
-import tagRoutes from "./tag.routes.js";
+import adRoutes from "./ad.routes";
+import categoryRoutes from "./category.routes";
+import tagRoutes from "./tag.routes";
 
 const router = Router();
 
